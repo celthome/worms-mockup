@@ -1,3 +1,62 @@
+// Initialize the Leaflet map
+var map = L.map('map').setView([49.63881062758846, 8.358768802235213], 14); // Set the center and zoom level
+
+// Add the OpenStreetMap tile layer
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+// GeoJSON URL
+const geojsonURL = 'https://raw.githubusercontent.com/celthome/worms-mockup/refs/heads/main/klimaoasen_4326.geojson';
+
+// Array to hold GeoJSON features
+let geojsonData = [];
+
+// Function to load and display GeoJSON
+function loadGeoJSON(url) {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Filter features to only include those with Relevanz == 1
+            const filteredData = {
+                ...data,
+                features: data.features.filter(feature => feature.properties.Relevanz === 1)
+            };
+            
+            // Store the features in the geojsonData array
+            geojsonData = filteredData.features;
+
+            // Add filtered GeoJSON to the map
+            L.geoJSON(filteredData, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: 8,
+                        color: 'blue',
+                        weight: 1,
+                        opacity: 1.0,
+                        fillColor: 'blue',
+                        fillOpacity: 0.4
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties && feature.properties["Name des Ortes"]) {
+                        layer.bindPopup("<b>" + feature.properties["Name des Ortes"] + "</b>");
+                    }
+                }
+            }).addTo(map);
+            console.log("GeoJSON Data Loaded:", geojsonData); // Log the loaded GeoJSON data
+        })
+        .catch(error => {
+            console.error("Error loading GeoJSON:", error);
+        });
+}
+
+// Load GeoJSON data
+loadGeoJSON(geojsonURL);
+geojsonData.features.forEach((feature, index) => {
+    if (!feature.geometry || !feature.geometry.coordinates) {
+        console.warn(`Feature missing geometry or coordinates at index ${index}:`, feature);
+    }
+});
+
 // Function to find the nearest location
 function findNearestLocation() {
     if (!navigator.geolocation) {
@@ -56,11 +115,18 @@ function findNearestLocation() {
         },
         error => {
             console.error("Geolocation error:", error);
-            if (error.code === 2) {
-                alert("Location information is unavailable. Please check your GPS or network connection.");
-            } else {
-                alert(`Error Code: ${error.code} - ${error.message}`);
+            alert("Unable to retrieve location. Please check your settings.");
+            
+            if (error.code === 1) {
+                console.log("User denied geolocation request.");
+            } else if (error.code === 2) {
+                console.log("Geolocation unavailable.");
+            } else if (error.code === 3) {
+                console.log("Geolocation request timed out.");
             }
+
+            // Detailed error log
+            console.log("Error Details: ", error.message);
         }
     );
 }
