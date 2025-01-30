@@ -1,7 +1,6 @@
 // Initialize the Leaflet map, centered at a neutral location
-var map = L.map('map').setView([49.63881062758846, 8.358768802235213], 14); // Default view, can be adjusted
+var map = L.map('map').setView([49.63881062758846, 8.358768802235213], 14); // Default view (neutral location)
 
-// Add the OpenStreetMap tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 // GeoJSON URL
@@ -42,7 +41,7 @@ function loadGeoJSON(url) {
                     }
                 }
             }).addTo(map);
-            console.log("GeoJSON Data Loaded:", geojsonData); // Log the loaded GeoJSON data
+            console.log("GeoJSON Data Loaded:", geojsonData);
         })
         .catch(error => {
             console.error("Error loading GeoJSON:", error);
@@ -71,7 +70,7 @@ function findNearestLocation() {
             console.log("User location:", userLat, userLon); // Log the user's location
 
             let nearestDistance = Infinity;
-            let nearestFeature = null;  // Track the feature corresponding to the nearest location
+            let nearestFeature = null;
 
             // Loop through the GeoJSON features and calculate the distance to each one
             geojsonData.forEach(feature => {
@@ -86,7 +85,7 @@ function findNearestLocation() {
                 // Check if the current feature is the closest one
                 if (distance < nearestDistance) {
                     nearestDistance = distance;
-                    nearestFeature = feature;  // Store the closest feature
+                    nearestFeature = feature;
                 }
             });
 
@@ -108,11 +107,10 @@ function findNearestLocation() {
         error => {
             console.error("Geolocation error:", error); // Log the error object
             alert(`Error Code: ${error.code} - ${error.message}`); // Show detailed error to the user
-            // Handle the case where geolocation fails
             console.log("Unable to retrieve location. Please check your settings.");
         }
     );
 }
 
-// Load GeoJSON data
+// Load GeoJSON data only when needed (button click)
 loadGeoJSON(geojsonURL);
