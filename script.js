@@ -20,7 +20,7 @@ function loadGeoJSON(url, callback) {
                 ...data,
                 features: data.features.filter(feature => feature.properties.Relevanz === 1)
             };
-            
+
             // Store the features in the geojsonData array
             geojsonData = filteredData.features;
 
@@ -85,33 +85,36 @@ function findNearestLocation() {
 
             // Loop through the GeoJSON features and calculate the distance to each one
             geojsonData.forEach(feature => {
-                if (feature.geometry && feature.geometry.coordinates) {
-                    const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-                    const distance = latlng.distanceTo([userLat, userLon]);
-
-                    // Check if the current feature is the closest one
-                    if (distance < nearestDistance) {
-                        nearestDistance = distance;
-                        nearestFeature = feature;  // Store the closest feature
-                    }
-                } else {
+                // Skip features with missing geometry or coordinates
+                if (!feature.geometry || !feature.geometry.coordinates) {
                     console.log("Feature missing geometry or coordinates:", feature);
+                    return; // Skip this feature
+                }
+
+                const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+                const distance = latlng.distanceTo([userLat, userLon]);
+
+                // Check if the current feature is the closest one
+                if (distance < nearestDistance) {
+                    nearestDistance = distance;
+                    nearestFeature = feature;  // Store the closest feature
                 }
             });
 
-            // Zoom into the nearest location
+            // Zoom into the nearest location if valid data is found
             if (nearestFeature) {
                 const nearestLatLng = [
                     nearestFeature.geometry.coordinates[1],
                     nearestFeature.geometry.coordinates[0]
                 ];
-                map.setView(nearestLatLng, 16);
+                map.setView(nearestLatLng, 16); // Adjust zoom level as needed
                 L.marker(nearestLatLng)
                     .addTo(map)
                     .bindPopup(`<b>Nearest Klimaoase:</b> ${nearestFeature.properties["Name des Ortes"]}`)
                     .openPopup();
             } else {
                 alert("No Klimaoasen found near you.");
+                map.setView([userLat, userLon], 14); // Adjust to user's location if no nearest feature is found
             }
         },
         error => {
