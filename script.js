@@ -24,14 +24,6 @@ function loadGeoJSON(url) {
             // Store the features in the geojsonData array
             geojsonData = filteredData.features;
 
-            // Log and validate GeoJSON data
-            console.log("GeoJSON Data Loaded:", geojsonData);
-            geojsonData.forEach((feature, index) => {
-                if (!feature.geometry || !feature.geometry.coordinates) {
-                    console.warn(`Feature missing geometry or coordinates at index ${index}:`, feature);
-                }
-            });
-
             // Add filtered GeoJSON to the map
             L.geoJSON(filteredData, {
                 pointToLayer: function (feature, latlng) {
@@ -50,6 +42,7 @@ function loadGeoJSON(url) {
                     }
                 }
             }).addTo(map);
+            console.log("GeoJSON Data Loaded:", geojsonData); // Log the loaded GeoJSON data
         })
         .catch(error => {
             console.error("Error loading GeoJSON:", error);
@@ -58,8 +51,12 @@ function loadGeoJSON(url) {
 
 // Load GeoJSON data
 loadGeoJSON(geojsonURL);
+geojsonData.features.forEach((feature, index) => {
+    if (!feature.geometry || !feature.geometry.coordinates) {
+        console.warn(`Feature missing geometry or coordinates at index ${index}:`, feature);
+    }
+});
 
-// Function to find the nearest location
 function findNearestLocation() {
     if (!navigator.geolocation) {
         alert("Geolocation is not supported by this browser.");
@@ -77,15 +74,11 @@ function findNearestLocation() {
         position => {
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
+
             console.log("User location:", userLat, userLon); // Log the user's location
 
-            if (geojsonData.length === 0) {
-                alert("No Klimaoasen data loaded. Please try again later.");
-                return;
-            }
-
             let nearestDistance = Infinity;
-            let nearestFeature = null;
+            let nearestLocation = null;
 
             // Loop through the GeoJSON features and calculate the distance to each one
             geojsonData.forEach(feature => {
@@ -96,21 +89,17 @@ function findNearestLocation() {
                     // Check if the current feature is the closest one
                     if (distance < nearestDistance) {
                         nearestDistance = distance;
-                        nearestFeature = feature;
+                        nearestLocation = latlng;
                     }
                 } else {
-                    console.warn("Feature missing geometry or coordinates:", feature);
+                    console.log("Feature missing geometry or coordinates:", feature);
                 }
             });
 
             // Zoom into the nearest location
-            if (nearestFeature) {
-                const nearestLatLng = [
-                    nearestFeature.geometry.coordinates[1],
-                    nearestFeature.geometry.coordinates[0]
-                ];
-                map.setView(nearestLatLng, 16);
-                L.marker(nearestLatLng)
+            if (nearestLocation && nearestFeature) {
+                map.setView(nearestLocation, 16);
+                L.marker(nearestLocation)
                     .addTo(map)
                     .bindPopup(`<b>Nearest Klimaoase:</b> ${nearestFeature.properties["Name des Ortes"]}`)
                     .openPopup();
@@ -121,6 +110,9 @@ function findNearestLocation() {
         error => {
             console.error("Geolocation error:", error); // Log the error object
             alert(`Error Code: ${error.code} - ${error.message}`); // Show detailed error to the user
+            // Handle the case where geolocation fails
+            console.log("Unable to retrieve location. Please check your settings.");
         }
     );
 }
+
