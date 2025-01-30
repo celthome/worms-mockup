@@ -11,7 +11,7 @@ const geojsonURL = 'https://raw.githubusercontent.com/celthome/worms-mockup/refs
 let geojsonData = [];
 
 // Function to load and display GeoJSON
-function loadGeoJSON(url, callback) {
+function loadGeoJSON(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -43,16 +43,6 @@ function loadGeoJSON(url, callback) {
                 }
             }).addTo(map);
             console.log("GeoJSON Data Loaded:", geojsonData); // Log the loaded GeoJSON data
-
-            // Validate and log GeoJSON features
-            geojsonData.forEach((feature, index) => {
-                if (!feature.geometry || !feature.geometry.coordinates) {
-                    console.warn(`Feature missing geometry or coordinates at index ${index}:`, feature);
-                }
-            });
-
-            // After loading the GeoJSON data, call the callback function
-            callback();  // This will call findNearestLocation
         })
         .catch(error => {
             console.error("Error loading GeoJSON:", error);
@@ -85,10 +75,9 @@ function findNearestLocation() {
 
             // Loop through the GeoJSON features and calculate the distance to each one
             geojsonData.forEach(feature => {
-                // Skip features with missing geometry or coordinates
                 if (!feature.geometry || !feature.geometry.coordinates) {
                     console.log("Feature missing geometry or coordinates:", feature);
-                    return; // Skip this feature
+                    return; // Skip features without geometry
                 }
 
                 const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
@@ -114,7 +103,6 @@ function findNearestLocation() {
                     .openPopup();
             } else {
                 alert("No Klimaoasen found near you.");
-                map.setView([userLat, userLon], 14); // Adjust to user's location if no nearest feature is found
             }
         },
         error => {
@@ -126,5 +114,5 @@ function findNearestLocation() {
     );
 }
 
-// Load GeoJSON data and call findNearestLocation after it's loaded
-loadGeoJSON(geojsonURL, findNearestLocation);
+// Load GeoJSON data
+loadGeoJSON(geojsonURL);
