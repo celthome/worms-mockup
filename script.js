@@ -42,7 +42,15 @@ function loadGeoJSON(url) {
                     }
                 }
             }).addTo(map);
+
             console.log("GeoJSON Data Loaded:", geojsonData); // Log the loaded GeoJSON data
+
+            // Check the GeoJSON features
+            geojsonData.forEach((feature, index) => {
+                if (!feature.geometry || !feature.geometry.coordinates) {
+                    console.warn(`Feature missing geometry or coordinates at index ${index}:`, feature);
+                }
+            });
         })
         .catch(error => {
             console.error("Error loading GeoJSON:", error);
@@ -51,11 +59,6 @@ function loadGeoJSON(url) {
 
 // Load GeoJSON data
 loadGeoJSON(geojsonURL);
-geojsonData.features.forEach((feature, index) => {
-    if (!feature.geometry || !feature.geometry.coordinates) {
-        console.warn(`Feature missing geometry or coordinates at index ${index}:`, feature);
-    }
-});
 
 // Function to find the nearest location
 function findNearestLocation() {
