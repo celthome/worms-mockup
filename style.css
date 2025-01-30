@@ -1,0 +1,227 @@
+/* Ensure the map and image are displayed next to each other */
+body, html {
+    margin: 0;
+    padding: 5px;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Flex container for text and image */
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align the items at the start of the container */
+    margin-bottom: 1px; /* Increased margin for spacing between text/image and map */
+}
+
+/* Style for the text section */
+.text-section {
+    width: 85%; /* Adjust width of the text */
+}
+
+/* Style for the image */
+.hero-image {
+    width: auto; /* Make image responsive */
+    height: 450px; /* Maintain aspect ratio */
+    border-radius: 8px; /* Optional styling */
+}
+
+/* Set the height of the map container */
+#map {
+    width: 100%; /* Make the map full width */
+    height: 550px; /* Set a fixed height for the map */
+    border: 2px solid #ccc; /* Optional border for the map */
+    margin-top: 5px; /* Ensure space between the image and the map */
+}
+
+/* Navigation bar styles */
+nav ul {
+    display: flex;
+    padding: 0px;
+    background-color: #333;
+    margin: 0;
+    justify-content: center;
+    list-style: none;
+}
+
+nav ul li {
+    margin: 0 1em;
+}
+
+nav ul li a {
+    color: white; 
+    text-decoration: none; 
+    font-size: 1.2em;
+    padding: 0.5em 1em; 
+    display: block; 
+    transition: background-color 0.3s; 
+}
+
+nav ul li a.active {
+    background-color: #6b6b6b; 
+    border-radius: 5px; 
+}
+
+nav ul li a:hover {
+    background-color: #ffff; 
+    color: #000000;
+    border-radius: 5px;
+}
+
+nav {
+    font-size: 1.1em;
+}
+
+/* Heading styles */
+h1 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+}
+
+h2 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px; /* Space between button and other content */
+    font-size: 1.2em;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.content {
+    margin: 30px auto;
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tip Box */
+.tip {
+    display: flex;
+    align-items: center;
+    background: #e3f2fd;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.tip:hover {
+    transform: scale(1.02);
+}
+
+.tip i {
+    font-size: 24px;
+    color: #3498db;
+    margin-right: 15px;
+}
+
+/* Info Link */
+.info {
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.info a {
+    text-decoration: none;
+    color: #036026;
+    font-weight: bold;
+}
+
+.info a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .content {
+        width: 100%;
+    }
+
+    .tip {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .tip i {
+        margin: 10px 0;
+    }
+}
+
+/* Style for the text section */
+.text-section {
+    width: 60%; /* Adjust width to avoid taking up too much space */
+    text-align: center; /* Center-align the text */
+    margin: 0 auto; /* Center horizontally */
+    padding: 20px; /* Add padding for better spacing */
+}
+
+/* Improve text readability */
+.text-section h1 {
+    font-size: 3.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.text-section h2 {
+    font-size: 2.4em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.text-section p {
+    font-size: 1.4em;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Center the button and make it pop */
+.text-section button {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 1.3em;
+    background-color: #2c9c3e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+.text-section button:hover {
+    background-color: #248a35;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .text-section {
+        width: 90%;
+    }
+
+    .text-section h1 {
+        font-size: 2.5em;
+    }
+
+    .text-section h2 {
+        font-size: 2em;
+    }
+
+    .text-section p {
+        font-size: 1.2em;
+    }
+}

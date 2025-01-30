@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Klimaoasen Worms</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Fix for favicon.ico 404 error -->
+    <link rel="icon" href="data:," />
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="active">Wormser Klimaoasen</a></li>
+            <li><a href="page2.html" class="inactive">Tipps für heiße Tage</a></li>
+        </ul>
+    </nav>
+
+    <section>
+        <!-- Flex container for image and text -->
+        <div class="flex-container">
+            <div class="text-section">
+                <h1>Wormser Klimaoasen</h1>    
+                <h2>Grüne Ruheorte für heiße Tage</h2>
+                <p>
+                    Worms wird heißer – Klimaoasen bieten kühle Rückzugsorte, die die Auswirkungen von Hitze abmildern. <br>
+                    Sie senken die Umgebungstemperatur, verbessern die Luftqualität und laden zum Verweilen ein. <br>
+                    Erleben Sie Natur in der Stadt und finden Sie Ruhe an heißen Tagen. <br>
+                    <h3>Diese Oasen finden Sie auf der Karte:</h3>
+                    <button id="findNearest" onclick="findNearestLocation()">Nächste Klimaoase finden</button>
+                </p>
+            </div>
+            <div class="image-section">
+                <img src="Worms_Metz_Tandem_HL_web-d7ceece4-6e4e3d30@1068w2x.png" alt="Symbolbild Klimaoasen Worms" class="hero-image">
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div id="map"></div>
+    </section>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Link to external JavaScript (your custom script) -->
+    <script src="script.js"></script>
+</body>
+</html>
