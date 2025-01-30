@@ -2,7 +2,7 @@
 body, html {
     margin: 0;
     padding: 5px;
-    height: 100%;
+    height: 80%;
     font-family: Arial, sans-serif;
 }
 
@@ -74,12 +74,12 @@ nav {
 
 /* Heading styles */
 h1 {
-    font-size: 3em;
+    font-size: 2em;
     margin-bottom: 0.5em;
 }
 
 h2 {
-    font-size: 2em;
+    font-size: 1em;
     margin-bottom: 0.5em;
 }
 
