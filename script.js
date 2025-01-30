@@ -11,7 +11,7 @@ const geojsonURL = 'https://raw.githubusercontent.com/celthome/worms-mockup/refs
 let geojsonData = [];
 
 // Function to load and display GeoJSON
-function loadGeoJSON(url) {
+function loadGeoJSON(url, callback) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -50,14 +50,14 @@ function loadGeoJSON(url) {
                     console.warn(`Feature missing geometry or coordinates at index ${index}:`, feature);
                 }
             });
+
+            // After loading the GeoJSON data, call the callback function
+            callback();  // This will call findNearestLocation
         })
         .catch(error => {
             console.error("Error loading GeoJSON:", error);
         });
 }
-
-// Load GeoJSON data
-loadGeoJSON(geojsonURL);
 
 // Function to find the nearest location
 function findNearestLocation() {
@@ -122,3 +122,6 @@ function findNearestLocation() {
         }
     );
 }
+
+// Load GeoJSON data and call findNearestLocation after it's loaded
+loadGeoJSON(geojsonURL, findNearestLocation);
