@@ -1,5 +1,5 @@
 // Initialize the Leaflet map
-var map = L.map('map').setView([49.63881062758846, 8.358768802235213], 14); // Set the center and zoom level
+var map = L.map('map').setView([49.63881062758846, 8.358768802235213], 14);
 
 // Add the OpenStreetMap tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -15,24 +15,19 @@ function loadGeoJSON(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            // Filter features to only include those with Relevanz == 1
+            // Filter valid features (exclude null geometry)
             const filteredData = {
                 ...data,
-                features: data.features.filter(feature => feature.properties.Relevanz === 1)
+                features: data.features.filter(feature => feature.properties.Relevanz === 1 && feature.geometry && feature.geometry.coordinates)
             };
-            
-            // Store the features in the geojsonData array
+
+            // Store the valid features in geojsonData
             geojsonData = filteredData.features;
 
-            // Log and validate GeoJSON data
+            // Log loaded GeoJSON data
             console.log("GeoJSON Data Loaded:", geojsonData);
-            geojsonData.forEach((feature, index) => {
-                if (!feature.geometry || !feature.geometry.coordinates) {
-                    console.warn(`Feature missing geometry or coordinates at index ${index}:`, feature);
-                }
-            });
 
-            // Add filtered GeoJSON to the map
+            // Add GeoJSON to the map
             L.geoJSON(filteredData, {
                 pointToLayer: function (feature, latlng) {
                     return L.circleMarker(latlng, {
@@ -66,7 +61,7 @@ function findNearestLocation() {
         return;
     }
 
-    // Check if the site is served over HTTPS (Geolocation requires HTTPS)
+    // Ensure the page is served over HTTPS
     if (window.location.protocol !== "https:") {
         alert("Geolocation requires HTTPS. Please ensure the site is served over HTTPS.");
         return;
@@ -77,33 +72,30 @@ function findNearestLocation() {
         position => {
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
-            console.log("User location:", userLat, userLon); // Log the user's location
+            console.log("User location:", userLat, userLon);
 
             if (geojsonData.length === 0) {
-                alert("No Klimaoasen data loaded. Please try again later.");
+                alert("No valid Klimaoasen data available.");
                 return;
             }
 
             let nearestDistance = Infinity;
             let nearestFeature = null;
 
-            // Loop through the GeoJSON features and calculate the distance to each one
+            // Find the nearest valid feature
             geojsonData.forEach(feature => {
                 if (feature.geometry && feature.geometry.coordinates) {
                     const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
                     const distance = latlng.distanceTo([userLat, userLon]);
 
-                    // Check if the current feature is the closest one
                     if (distance < nearestDistance) {
                         nearestDistance = distance;
                         nearestFeature = feature;
                     }
-                } else {
-                    console.warn("Feature missing geometry or coordinates:", feature);
                 }
             });
 
-            // Zoom into the nearest location
+            // If a nearest feature is found, zoom in
             if (nearestFeature) {
                 const nearestLatLng = [
                     nearestFeature.geometry.coordinates[1],
@@ -115,12 +107,12 @@ function findNearestLocation() {
                     .bindPopup(`<b>Nearest Klimaoase:</b> ${nearestFeature.properties["Name des Ortes"]}`)
                     .openPopup();
             } else {
-                alert("No Klimaoasen found near you.");
+                alert("No valid Klimaoasen found near you.");
             }
         },
         error => {
-            console.error("Geolocation error:", error); // Log the error object
-            alert(`Error Code: ${error.code} - ${error.message}`); // Show detailed error to the user
+            console.error("Geolocation error:", error);
+            alert(`Error Code: ${error.code} - ${error.message}`);
         }
     );
 }
