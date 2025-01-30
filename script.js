@@ -98,10 +98,10 @@ function findNearestLocation() {
                 map.setView(nearestLatLng, 16); // Adjust zoom level as needed
                 L.marker(nearestLatLng)
                     .addTo(map)
-                    .bindPopup(`<b>Nearest Klimaoase:</b> ${nearestFeature.properties["Name des Ortes"]}`)
+                    .bindPopup(`<b>Nächste Klimaoase:</b> ${nearestFeature.properties["Name des Ortes"]}`)
                     .openPopup();
             } else {
-                alert("No Klimaoasen found near you.");
+                alert("Keine Klimaoase in der Nähe gefunden.");
             }
         },
         error => {
