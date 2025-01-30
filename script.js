@@ -1,5 +1,5 @@
-// Initialize the Leaflet map
-var map = L.map('map').setView([49.63881062758846, 8.358768802235213], 14); // Set the center and zoom level
+// Initialize the Leaflet map, centered at a neutral location
+var map = L.map('map').setView([49.63881062758846, 8.358768802235213], 14); // Default view, can be adjusted
 
 // Add the OpenStreetMap tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
