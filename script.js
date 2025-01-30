@@ -1,59 +1,3 @@
-// Initialize the Leaflet map
-var map = L.map('map').setView([49.63881062758846, 8.358768802235213], 14);
-
-// Add the OpenStreetMap tile layer
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-// GeoJSON URL
-const geojsonURL = 'https://raw.githubusercontent.com/celthome/worms-mockup/refs/heads/main/klimaoasen_4326.geojson';
-
-// Array to hold GeoJSON features
-let geojsonData = [];
-
-// Function to load and display GeoJSON
-function loadGeoJSON(url) {
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            // Filter valid features (exclude null geometry)
-            const filteredData = {
-                ...data,
-                features: data.features.filter(feature => feature.properties.Relevanz === 1 && feature.geometry && feature.geometry.coordinates)
-            };
-
-            // Store the valid features in geojsonData
-            geojsonData = filteredData.features;
-
-            // Log loaded GeoJSON data
-            console.log("GeoJSON Data Loaded:", geojsonData);
-
-            // Add GeoJSON to the map
-            L.geoJSON(filteredData, {
-                pointToLayer: function (feature, latlng) {
-                    return L.circleMarker(latlng, {
-                        radius: 8,
-                        color: 'blue',
-                        weight: 1,
-                        opacity: 1.0,
-                        fillColor: 'blue',
-                        fillOpacity: 0.4
-                    });
-                },
-                onEachFeature: function (feature, layer) {
-                    if (feature.properties && feature.properties["Name des Ortes"]) {
-                        layer.bindPopup("<b>" + feature.properties["Name des Ortes"] + "</b>");
-                    }
-                }
-            }).addTo(map);
-        })
-        .catch(error => {
-            console.error("Error loading GeoJSON:", error);
-        });
-}
-
-// Load GeoJSON data
-loadGeoJSON(geojsonURL);
-
 // Function to find the nearest location
 function findNearestLocation() {
     if (!navigator.geolocation) {
@@ -112,7 +56,11 @@ function findNearestLocation() {
         },
         error => {
             console.error("Geolocation error:", error);
-            alert(`Error Code: ${error.code} - ${error.message}`);
+            if (error.code === 2) {
+                alert("Location information is unavailable. Please check your GPS or network connection.");
+            } else {
+                alert(`Error Code: ${error.code} - ${error.message}`);
+            }
         }
     );
 }
